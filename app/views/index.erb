@@ -1,1 +1,85 @@
-<h1>Home Page</h1>
+<html>
+<head>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+</head>
+<body>
+  <h1>Contact List Over and Over</h1>
+  <h5>.  madness entangelment since 2016  .</h5>
+  <hr/>
+  <form id=creating-contacts>
+    <input placeholder="Name" id="name"></input>
+    <input placeholder="Email" id="email"></input>
+    <input placeholder="Phone" id="phone"></input>
+    <button id="click-button">Add new contact</button>
+  </form>
+  <hr/>
+  <input placeholder="Search" id="search"></input>
+  <button id="click-button-search">Search</button>
+  <br>
+  <hr/>
+  <table id="contactsTable" class="table table-striped">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+    </tr>
+  </table>
+
+  </div>
+
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+      $.ajax( {
+        url: '/contacts',
+        dataType: 'json',
+        success: function (json) {
+          json.forEach( contact => {
+            $('table').append(`
+              <tr>
+                <td>${contact.name}</td>
+                <td>${contact.phone}</td>
+                <td>${contact.email}</td>
+              </tr>
+            `)
+          })          
+        }
+      })
+
+      $('#click-button').click(function(){
+
+        var data = {
+          name: $('#name').val(),
+          email: $('#email').val(),
+          phone: $('#phone').val(),
+        };
+       
+       $.ajax({
+          type: "POST",
+          url: '/contacts',
+          data: data,
+          success: function(data) {console.log(data)}
+        });
+      });
+
+      $('#click-button-search').click(function(){
+        
+        $.ajax({
+          type: "POST",
+          url: '/contacts/search',
+          data:$('#search').val()
+        }).done( function(data) {
+          $contacts.empty
+          //instead of console.log clear the table and then present only the result.
+          console.log(data)
+        })
+
+      })
+    })
+
+    
+  </script>
+</body>
+</html>
